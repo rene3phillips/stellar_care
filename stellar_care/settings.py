@@ -38,8 +38,58 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Required by allauth
+    'django.contrib.sites', 
+    # Records app
     'records.apps.RecordsConfig', 
+    # Allauth apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # Providers
+    'allauth.socialaccount.providers.google',
 ]
+
+SITE_ID = 1 # Required by sites framework
+
+LOGIN_REDIRECT_URL = 'records:patient_list'
+# LOGOUT_REDIRECT_URL = 'records:patient_list'
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False # Or True, depending on your model needs
+ACCOUNT_AUTHENTICATION_METHOD = 'email' # Or 'username' or 'username_email'
+ACCOUNT_EMAIL_VERIFICATION = 'optional' # Or 'mandatory' or 'none'
+LOGIN_REDIRECT_URL = '/' # URL to redirect to after login (e.g., home page)
+ACCOUNT_LOGOUT_REDIRECT_URL = '/' # URL to redirect to after logout
+# ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True # Optional
+# ACCOUNT_SESSION_REMEMBER = True # Optional
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': env('GOOGLE_CLIENT_ID'),
+            'secret': env('GOOGLE_CLIENT_SECRET'),
+            'key': '' # Keep empty
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -49,6 +99,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'stellar_care.urls'

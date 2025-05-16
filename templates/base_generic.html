@@ -10,11 +10,20 @@
 <body>
     <h1>Hospital Management System</h1>
     <nav>
-        <a href="">Doctors</a> |
-        <a href="{% url 'records:patient_list' %}">Patients</a> |
-        <a href="">Appointments</a> |
-        <a href="">Billing</a> 
-        <!-- add Doctors, Appointments, and Billing in the future... -->
+        {% if user.is_authenticated %}
+            <span>Hi, {{ user.email }}!</span>
+            <a href="{% url 'account_logout' %}">Logout</a>
+            <br>
+            <br>
+            <a href="">Doctors</a> |
+            <a href="{% url 'records:patient_list' %}">Patients</a> |
+            <a href="">Appointments</a> |
+            <a href="">Billing</a> 
+            <!-- add Doctors, Appointments, and Billing in the future... -->
+        {% else %}
+            <a href="{% url 'account_login' %}">Login</a>
+            <a href="{% url 'account_signup' %}">Sign Up</a>
+        {% endif %}
     </nav>
     <hr>
     {% block content %}{% endblock %}

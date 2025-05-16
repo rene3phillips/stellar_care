@@ -1,6 +1,6 @@
 # StellarCare
 
-This is a Django-based Hospital Management System that implements CRUD operations for patient records. The system allows users to create, read, update, and delete patient information.
+This is a Django-based Hospital Management System that implements CRUD operations for patient records. The system allows users to create, read, update, and delete patient information. Authentication and permissions are implemented to protect sensitive operations.
 
 
 ## Base URL Path
@@ -46,21 +46,51 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-### 4. Create a .env file 
+### 4. Google OAuth Setup
+
+1. Go to the Google Cloud Console.
+2. Create or select a project.
+3. Navigate to APIs & Services > Credentials.
+4. Create OAuth 2.0 Client ID credentials:
+    Application type: Web application
+    Authorized redirect URI:
+
+    ```bash
+    http://localhost:8000/accounts/google/login/callback/
+    ```
+### 5. Create a .env file 
 Create a `.env` file based on `env.example` and fill in actual database credentials. 
 
-### 5. Run Migrations
+### 6. Run Migrations
 ```powershell
 python manage.py migrate
 ```
 
-### 6. Create a superuser
+### 7. Create a superuser
 ```powershell
 python manage.py createsuperuser
 ```
 Follow the prompts to create a user account for the Django admin site.
 
-### 7. Run the development server
+### 8. Run the development server
 ```powershell
 python manage.py runserver
 ```
+
+## Testing Authentication & Permissions
+### Login Testing
+1. Visit http://localhost:8000/accounts/login
+2. Log in with:  
+    - Login credentials (created with Django admin)
+    - Google login
+3. Afer login, your email should appear in the navigation bar.
+
+### Permission Testing
+1. Not logged in:  
+    - Attempt to access /records/<pk>/update or /records/<pk>/delete
+    - You should be redirected to login.
+2. Logged in as non-staff:  
+    - Access update/delete views.
+    - You should see a 403 Forbidden error.
+3. Logged in as staff:  
+    - You should be able to update or delete patient records. 
