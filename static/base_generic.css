@@ -1,0 +1,38 @@
+body {
+    background-color: #F5F5F5;
+    color: #2F4F79;
+    font-family: Verdana, sans-serif;
+}
+
+button {
+    color: #FFF;
+    background-color: #FF8C00;
+    border-radius: 15px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #FFD700;
+    color: #2F4F79;
+}
+
+a {
+    color: #2F4F79;
+    text-decoration: none;
+    margin: 0 15px;
+}
+
+a:hover {
+    color: #4CAF50;
+}
+
+nav a {
+    color: #2f4F79;
+    margin: 0;
+}
+
+nav a:hover {
+    color: #4CAF50;
+}

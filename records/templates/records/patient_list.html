@@ -1,0 +1,17 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Patient List{% endblock %}
+
+{% block content %}
+    <h2>Patients</h2>
+    <ul>
+        {% for patient in patients %}
+        <li>
+            <a href="{% url 'records:patient_detail' patient.pk %}">
+                {{ patient.first_name }} {{ patient.last_name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'records:patient_create' %}">Add New Patient</a>
+{% endblock %}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hospital Management System{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'base_generic.css' %}">
+</head>
+<body>
+    <h1>Hospital Management System</h1>
+    <nav>
+        <a href="">Doctors</a> |
+        <a href="{% url 'records:patient_list' %}">Patients</a> |
+        <a href="">Appointments</a> |
+        <a href="">Billing</a> 
+        <!-- add Doctors, Appointments, and Billing in the future... -->
+    </nav>
+    <hr>
+    {% block content %}{% endblock %}
+</body>
+</html>

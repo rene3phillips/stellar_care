@@ -1,0 +1,14 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Patient Form{% endblock %}
+
+{% block content %}
+    <h2>Patient Form</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }} <!-- wraps each field in a <p> tag -->
+        <button type="submit">Save</button>
+    </form>
+    <br>
+    <a href="{% url 'records:patient_list' %}">Cancel</a>
+{% endblock %}
