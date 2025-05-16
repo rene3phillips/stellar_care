@@ -87,7 +87,7 @@ python manage.py runserver
 
 ### Permission Testing
 1. Not logged in:  
-    - Attempt to access /records/<pk>/update or /records/<pk>/delete
+    - Attempt to access `/records/<int:pk>/update` or `/records/<int:pk>/delete`.
     - You should be redirected to login.
 2. Logged in as non-staff:  
     - Access update/delete views.
