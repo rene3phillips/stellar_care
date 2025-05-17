@@ -3,14 +3,19 @@
 This is a Django-based Hospital Management System that implements CRUD operations for patient records. The system allows users to create, read, update, and delete patient information. Authentication and permissions are implemented to protect sensitive operations.
 
 
-## Base URL Path
+## Base URL Paths
 
-The base URL path for accessing the app's view is:
+Web frontend (Django views):
 ```bash
 /records/
 ```
 
-## CRUD Operations
+REST API base URL:
+```bash
+/api/
+```
+
+## Web Frontend CRUD Operations
 
 ### 1. View All Patients
 Navigate to `/records/` to see a complete list of patients.
@@ -26,6 +31,47 @@ Navigate to `/records/<int:pk>/update/` or clcik "Update" to update a patient's 
 
 ### 5. Delete a Patient
 Navigate to `/records/<int:pk>/delete/` or click "Delete" to remove a patient from the system.
+
+## REST API Details
+
+### Exposed Models
+
+- Patient: Full CRUD support via API endpoints
+
+### API URLs
+
+- Base API endpoint:
+```bash
+/api/
+```
+
+- Patients endpoint:
+```bash
+/api/patients/
+```
+
+- API schema and documentation:
+    - Swagger UI: `/api/schema/swagger-ui`
+    - Redoc UI: `/api/schema/redoc/`
+
+### Testing the API
+
+1. Start the server:
+``` powershell
+python manage.py runserver
+```
+
+2. Log in to the web frontend at:
+``` bash
+http://127.0.0.1.8000/accounts/login
+```
+
+3. Access the API browser interface:
+```bash
+http://127.0.0.1:8000/api/
+```
+
+4. Use the browsable API to test GET, POST, PUT, and DELETE requests on the Patient endpoints.
 
 ## Setup Instructions
 
@@ -89,8 +135,17 @@ python manage.py runserver
 1. Not logged in:  
     - Attempt to access `/records/<int:pk>/update` or `/records/<int:pk>/delete`.
     - You should be redirected to login.
-2. Logged in as non-staff:  
-    - Access update/delete views.
+2. Logged in as a non-staff user who is NOT the owner:  
+    - Attempt to access update/delete views for a patient you don't own.
     - You should see a 403 Forbidden error.
+3. Logged in as the owner (non-staff):
+    - You should be able to update or delete *your own* patient records.
 3. Logged in as staff:  
-    - You should be able to update or delete patient records. 
+    - You should be able to update or delete *any* patient records. 
+
+### Example Git Commit
+``` powershell
+git add .
+git commit -m 'feat: Add DRF API endpoints'
+git push
+```

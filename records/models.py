@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 class Doctor(models.Model):
@@ -10,6 +11,7 @@ class Doctor(models.Model):
         return f"Dr. {self.first_name} {self.last_name} ({self.specialty})"
 
 class Patient(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     date_of_birth = models.DateField()

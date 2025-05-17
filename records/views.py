@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 class PatientListView(LoginRequiredMixin, ListView):
     model = Patient
     template_name = 'records/patient_list.html'
-    context_object_name = 'patients' # 'for patient in patients' vs 'for patient in object_list'
+    context_object_name = 'patients' # 
 
 class PatientDetailView(LoginRequiredMixin, DetailView):
     model = Patient
@@ -14,9 +14,14 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
 
 class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient
-    fields = ['first_name', 'last_name', 'date_of_birth'] # which fields to include
+    fields = ['first_name', 'last_name', 'date_of_birth'] 
     template_name = 'records/patient_form.html'
-    success_url = reverse_lazy('records:patient_list') # where to redirect 
+    success_url = reverse_lazy('records:patient_list') 
+
+    # Override form_valid method to set the owner of this model object to the current logged-in user
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 class PatientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Patient
@@ -24,8 +29,10 @@ class PatientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'records/patient_form.html'
     success_url = reverse_lazy('records:patient_list') 
 
+    # Override test_func method to determine if current user is staff (can login to Django admin dashboard)
     def test_func(self):
-        return self.request.user.is_staff
+        patient = self.get_object()
+        return self.request.user.is_staff or patient.owner == self.request.user
 
 class PatientDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Patient
@@ -33,4 +40,5 @@ class PatientDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('records:patient_list')
 
     def test_func(self):
-        return self.request.user.is_staff
+        patient = self.get_object()
+        return self.request.user.is_staff or patient.owner == self.request.user

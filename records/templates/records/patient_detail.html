@@ -5,7 +5,9 @@
 {% block content %}
     <h2>{{ object.first_name }} {{ object.last_name }}</h2>
     <p>Date of Birth: {{ object.date_of_birth }}</p>
-    <a href="{% url 'records:patient_update' object.pk %}">Edit</a> |
-    <a href="{% url 'records:patient_delete' object.pk %}">Delete</a> |
+    {% if object.owner == user or user.is_staff %}
+        <a href="{% url 'records:patient_update' object.pk %}">Edit</a> |
+        <a href="{% url 'records:patient_delete' object.pk %}">Delete</a> |
+    {% endif %}
     <a href="{% url 'records:patient_list' %}">Back to List</a> 
 {% endblock %}

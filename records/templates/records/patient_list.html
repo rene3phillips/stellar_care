@@ -13,5 +13,7 @@
         </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'records:patient_create' %}">Add New Patient</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'records:patient_create' %}">Add New Patient</a>
+    {% endif %}
 {% endblock %}
