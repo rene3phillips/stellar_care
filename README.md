@@ -32,47 +32,6 @@ Navigate to `/records/<int:pk>/update/` or clcik "Update" to update a patient's 
 ### 5. Delete a Patient
 Navigate to `/records/<int:pk>/delete/` or click "Delete" to remove a patient from the system.
 
-## REST API Details
-
-### Exposed Models
-
-- Patient: Full CRUD support via API endpoints
-
-### API URLs
-
-- Base API endpoint:
-```bash
-/api/
-```
-
-- Patients endpoint:
-```bash
-/api/patients/
-```
-
-- API schema and documentation:
-    - Swagger UI: `/api/schema/swagger-ui`
-    - Redoc UI: `/api/schema/redoc/`
-
-### Testing the API
-
-1. Start the server:
-``` powershell
-python manage.py runserver
-```
-
-2. Log in to the web frontend at:
-``` bash
-http://127.0.0.1.8000/accounts/login
-```
-
-3. Access the API browser interface:
-```bash
-http://127.0.0.1:8000/api/
-```
-
-4. Use the browsable API to test GET, POST, PUT, and DELETE requests on the Patient endpoints.
-
 ## Setup Instructions
 
 ### 1. Clone the repository 
@@ -124,6 +83,7 @@ python manage.py runserver
 ```
 
 ## Testing Authentication & Permissions
+
 ### Login Testing
 1. Visit http://localhost:8000/accounts/login
 2. Log in with:  
@@ -143,9 +103,105 @@ python manage.py runserver
 3. Logged in as staff:  
     - You should be able to update or delete *any* patient records. 
 
-### Example Git Commit
+## Example Git Commit
 ``` powershell
 git add .
 git commit -m 'feat: Add DRF API endpoints'
 git push
 ```
+
+## REST API Details
+
+### Exposed Models
+
+- Patient: Full CRUD support via API endpoints
+
+### API URLs
+
+- Base API endpoint:
+```bash
+/api/
+```
+
+- Patients endpoint:
+```bash
+/api/patients/
+```
+
+- API schema and documentation:
+    - Swagger UI: `/api/schema/swagger-ui`
+    - Redoc UI: `/api/schema/redoc/`
+
+### Filtering, Searching, and Ordering
+
+The API supports filtering, searching, and ordering via query parameters:
+
+- Filtering by field:
+    Use `?field=value` to filter records by exact field match.
+    Example:
+    ```bash
+    /api/patients/?first_name=Walter
+    ```
+
+- Searching:
+    Use `?search=term` to search across predefined fields.
+    Example:
+    ```bash
+    /api/patients/?search=White
+    ```
+
+- Ordering:
+    Use `?ordering=field` to order ascending or `?ordering=-field` for descending order.
+    Example:
+    ```bash
+    /api/patients/?ordering=date_of_birth
+    ```
+
+You can combine these parameters as needed:
+```bash
+/api/patients/?last_name=Potter&ordering=date_of_birth
+```
+
+### Pagination
+
+- The API uses pagination to limit the number of results per response.
+- Defualt page size: 10 patients per page.
+- Use the `?page=` query parameter to navigate pages.
+Example:
+```bash
+/api/patients/?page2
+```
+
+### Custom Permission Logic
+
+- Only owners of a patient record can update or delete it.
+- Staff users have full access to update/delete any patient record.
+- Unauthenticated users cannot update or delete patient records.
+- Read (GET) operations are only accessible to authenticated users. 
+
+### Testing the API
+
+1. Start the server:
+``` powershell
+python manage.py runserver
+```
+
+2. Log in to the web frontend at:
+``` bash
+http://127.0.0.1.8000/accounts/login
+```
+
+3. Access the API browser interface:
+```bash
+http://127.0.0.1:8000/api/
+```
+
+4. Manually test permissions:
+    Logged in as a regualar user
+        - Can view the patients list and individual patient records
+        - Can edit/delete only the patient records you created.
+    Logged in as a staff user
+        - Full access
+        - Can view, create, update, and delete any patient
+    Not logged in
+        - Cannot access the API at all
