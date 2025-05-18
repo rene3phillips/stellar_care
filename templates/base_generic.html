@@ -8,24 +8,31 @@
     <link rel="stylesheet" href="{% static 'base_generic.css' %}">
 </head>
 <body>
-    <h1>Hospital Management System</h1>
+    <h1 class="title">🌌StellarCare</h1>
+    <h2 class="tagline">Exceptional care, light-years ahead.</h2>
     <nav>
         {% if user.is_authenticated %}
-            <span>Hi, {{ user.email }}!</span>
-            <a href="{% url 'account_logout' %}">Logout</a>
+            <div class="greeting">
+                <span>Hello, {{ user.email }}!</span>
+                <a href="{% url 'account_logout' %}">Logout</a>
+            </div>
             <br>
             <br>
-            <a href="">Doctors</a> |
-            <a href="{% url 'records:patient_list' %}">Patients</a> |
-            <a href="">Appointments</a> |
-            <a href="">Billing</a> 
-            <!-- add Doctors, Appointments, and Billing in the future... -->
+            <div class="nav-links">
+                <a href="">Doctors</a> 
+                <a href="{% url 'records:patient_list' %}">Patients</a> 
+                <a href="">Appointments</a> 
+                <a href="">Billing</a> 
+                <!-- add Doctors, Appointments, and Billing in the future... -->
+            </div>
         {% else %}
             <a href="{% url 'account_login' %}">Login</a>
             <a href="{% url 'account_signup' %}">Sign Up</a>
         {% endif %}
     </nav>
     <hr>
-    {% block content %}{% endblock %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 </body>
 </html>

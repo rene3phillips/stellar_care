@@ -8,4 +8,4 @@ class PatientViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save() # no owner
+        serializer.save(owner=self.request.user) 

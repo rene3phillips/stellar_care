@@ -44,13 +44,15 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend', # Enables allauth to handle authentication using email, social, etc.
 )
 
-ACCOUNT_EMAIL_REQUIRED = True # email required for signup and login
-ACCOUNT_USERNAME_REQUIRED = False  
-ACCOUNT_AUTHENTICATION_METHOD = 'email' 
+# ACCOUNT_EMAIL_REQUIRED = True # email required for signup and login
+ACCOUNT_LOGIN_METHODS = {'email'} # New
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*'] # New
+# ACCOUNT_USERNAME_REQUIRED = False  
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional' 
 LOGIN_REDIRECT_URL = '/' # will redirect to /records/ due to project urls.py
 ACCOUNT_LOGOUT_REDIRECT_URL = '/' 
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True 
+# ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True 
 ACCOUNT_SESSION_REMEMBER = True 
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -131,6 +133,11 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+    'django_filters.rest_framework.DjangoFilterBackend',
+    'rest_framework.filters.SearchFilter',
+    'rest_framework.filters.OrderingFilter',
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }

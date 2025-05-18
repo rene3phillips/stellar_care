@@ -29,7 +29,7 @@ class PatientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'records/patient_form.html'
     success_url = reverse_lazy('records:patient_list') 
 
-    # Override test_func method to determine if current user is staff (can login to Django admin dashboard)
+    # Override test_func method to determine if current user is staff (can login to Django admin dashboard) or the owner
     def test_func(self):
         patient = self.get_object()
         return self.request.user.is_staff or patient.owner == self.request.user
