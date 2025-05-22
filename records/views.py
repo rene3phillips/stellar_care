@@ -6,7 +6,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 class PatientListView(LoginRequiredMixin, ListView):
     model = Patient
     template_name = 'records/patient_list.html'
-    context_object_name = 'patients' # 
+    context_object_name = 'patients' 
+
+    def get_queryset(self):
+        return Patient.objects.order_by('last_name')
 
 class PatientDetailView(LoginRequiredMixin, DetailView):
     model = Patient

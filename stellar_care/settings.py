@@ -130,19 +130,27 @@ AUTH_PASSWORD_VALIDATORS = [
 # REST framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        # Uses Django sessions to authenticate users
         'rest_framework.authentication.SessionAuthentication',
+        # Use for Postman testing
+        'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
+        # By default, it requires users to be logged in to view an API endpoint
         'rest_framework.permissions.IsAuthenticated',
-    ],
+    ], 
     'DEFAULT_FILTER_BACKENDS': [
-    'django_filters.rest_framework.DjangoFilterBackend',
-    'rest_framework.filters.SearchFilter',
-    'rest_framework.filters.OrderingFilter',
+        # Enables filtering, search, and ordering of API results with queries
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
     ],
+    # Enables pagination using page numbers
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,  # Set default number of items per page   
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # Sets default number of items per page
+    'PAGE_SIZE': 10,  
+    # Uses drf_spectacular to create schema documentation
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', 
 }
 
 # Static files (CSS, JavaScript, Images)
