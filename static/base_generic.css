@@ -68,6 +68,16 @@ strong {
     color: #D4AF37;
 }
 
+form {
+    max-width: 20%;
+}
+
+form p {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
 .title {
     color: #A4A6F6;
     font-size: 3.5rem;
