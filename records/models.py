@@ -15,8 +15,15 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     date_of_birth = models.DateField()
-
-
+    email = models.EmailField(blank=True, null=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    sex  = models.CharField(max_length=2, choices=[("M", "Male"), ("F", "Female"), ("U", "Unknown"), ("O", "Other"), ], null=True, blank=True)
+    emergency_contact = models.CharField(max_length = 100, null=True, blank=True)
+    insurance_number = models.CharField(max_length=50, null=True, blank=True)
+    allergies = models.TextField(null=True, blank=True)
+    medical_history = models.TextField(null=True, blank=True)
+    
     def __str__(self):
         return f"{self.last_name}, {self.first_name}"
 

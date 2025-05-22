@@ -17,7 +17,7 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
 
 class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient
-    fields = ['first_name', 'last_name', 'date_of_birth'] 
+    fields = ['first_name', 'last_name', 'date_of_birth', 'email', 'phone_number', 'address', 'sex', 'emergency_contact', 'insurance_number', 'allergies', 'medical_history'] 
     template_name = 'records/patient_form.html'
     success_url = reverse_lazy('records:patient_list') 
 
@@ -28,7 +28,7 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
 
 class PatientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Patient
-    fields = ['first_name', 'last_name', 'date_of_birth'] 
+    fields = ['first_name', 'last_name', 'date_of_birth', 'email', 'phone_number', 'address', 'sex', 'emergency_contact', 'insurance_number', 'allergies', 'medical_history'] 
     template_name = 'records/patient_form.html'
     success_url = reverse_lazy('records:patient_list') 
 
