@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, permissions
 from .models import Patient
 from .serializers import PatientSerializer
 from .permissions import IsOwnerOrReadOnly
