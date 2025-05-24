@@ -8,7 +8,7 @@ services:
     container_name: django_web
     # Command to run (includes migration check and Gunicorn start)
     # Adjust 'myproject.wsgi:application' if your project name differs
-    command: sh -c "python manage.py migrate && gunicorn myproject.wsgi:application --bind 0.0.0.0:8000"
+    command: sh -c "python manage.py migrate && gunicorn stellar_care.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       # Mount current directory into container for development (live code reload)
       # For production, you'd typically just rely on the code copied in the Dockerfile
