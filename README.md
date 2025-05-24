@@ -2,7 +2,6 @@
 
 This is a Django-based Hospital Management System that implements CRUD operations for patient records. The system allows users to create, read, update, and delete patient information. Authentication and permissions are implemented to protect sensitive operations.
 
-
 ## Base URL Paths
 
 Web frontend (Django views):
@@ -196,12 +195,50 @@ http://127.0.0.1.8000/accounts/login
 http://127.0.0.1:8000/api/
 ```
 
-4. Manually test permissions:
-    Logged in as a regualar user
-        - Can view the patients list and individual patient records
-        - Can edit/delete only the patient records you created.
-    Logged in as a staff user
-        - Full access
-        - Can view, create, update, and delete any patient
-    Not logged in
-        - Cannot access the API at all
+4. Manually test permissions:  
+    **Logged in as a regular user**  
+        - Can view the patients list and individual patient records  
+        - Can edit/delete only the patient records you created.  
+    **Logged in as a staff user**  
+        - Full access  
+        - Can view, create, update, and delete any patient  
+    **Not logged in**  
+        - Cannot access the API at all  
+
+## Docker Setup
+
+### Environment Variables
+
+- Copy `env.example` to `.env` and update your environment variables. 
+
+### Build and Run the Application with Docker Compose
+
+1. Build the Docker images:
+```powershell
+docker compose build
+```
+
+2. Start the containers in detached mode:
+```powershell
+docker compose up -d
+```
+
+3. Apply database migrations inside the web container
+```powershell
+docker compose exec web python manage.py migrate
+```
+
+4. Collect static files to serve CSS files:
+```powershell
+docker compose exec web python manage.py collectstatic --noinput
+```
+
+5. (Optional) Create a superuser inside the container:
+```powershell
+docker compose exec web python manage.py createsuperuser
+```
+
+### Accessing the Application
+
+- Visit `http://localhost:8000` to use the web frontend.
+- API base URL: `http://localhost:8000/api/`
