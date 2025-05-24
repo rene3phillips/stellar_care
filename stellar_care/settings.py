@@ -89,7 +89,7 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -155,9 +155,7 @@ REST_FRAMEWORK = {
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',  
-]
+STATIC_ROOT = BASE_DIR / 'staticfiles' # Docker
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
