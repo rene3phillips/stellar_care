@@ -19,11 +19,10 @@
             <br>
             <br>
             <div class="nav-links">
-                <a href="">Doctors</a> 
-                <a href="{% url 'records:patient_list' %}">Patients</a> 
-                <a href="">Appointments</a> 
-                <a href="">Billing</a> 
-                <!-- add Doctors, Appointments, and Billing in the future... -->
+                <a href="{% url 'records:doctor_list' %}" class="{% if request.path == '/records/doctors/' %}active{% endif %}">Doctors</a> 
+                <a href="{% url 'records:patient_list' %}" class="{% if request.path == '/records/patients/' %}active{% endif %}">Patients</a> 
+                <a href="{% url 'records:appointment_list' %}" class="{% if request.path == '/records/appointments/' %}active{% endif %}">Appointments</a> 
+                <a href="{% url 'records:billing_list' %}" class="{% if request.path == '/records/billing/' %}active{% endif %}">Billing</a> 
             </div>
         {% else %}
             <a href="{% url 'account_login' %}">Login</a>

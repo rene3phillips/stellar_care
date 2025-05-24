@@ -44,6 +44,10 @@ nav a {
     margin: 0;
 }
 
+nav a.active {
+    color: #A4A6F6;
+}
+
 ul {
     list-style: none;
     padding-left: 0;
@@ -69,7 +73,7 @@ strong {
 }
 
 form {
-    max-width: 20%;
+    max-width: 25%;
 }
 
 form p {

@@ -1,0 +1,20 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Appointment Detail{% endblock %}
+
+{% block content %}
+    <h2>{{ object.first_name }} {{ object.last_name }}</h2>
+    <p><strong>Patient:</strong> {{ object.patient.first_name}} {{ object.patient.last_name }}</p>
+    <p><strong>Doctor:</strong> Dr. {{ object.doctor.first_name }} {{object.doctor.last_name}}</p>
+    <p><strong>Date:</strong> {{ object.appointment_date }}</p>
+    <p><strong>Time:</strong> {{ object.appointment_time }} </p>
+    <p><strong>Duration:</strong> {{ object.duration }} minutes</p>
+    <p><strong>Status:</strong> {{ object.status }}</p>
+    <p><strong>Notes:</strong> {{ object.notes }}</p>
+
+    {% if object.owner == user or user.is_staff %}
+        <a href="{% url 'records:appointment_update' object.pk %}">Edit</a> |
+        <a href="{% url 'records:appointment_delete' object.pk %}">Delete</a> |
+    {% endif %}
+    <a href="{% url 'records:appointment_list' %}">Back to List</a> 
+{% endblock %}

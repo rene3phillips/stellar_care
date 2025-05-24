@@ -1,0 +1,14 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+    <h2>Delete Bill</h2>
+    <p>Are you sure you want to delete {{ object.appointment.patient.first_name }} {{ object.appointment.patient.last_name }}'s bill?</p>
+    <form method="post"> <!-- submits post request -->
+        {% csrf_token %} <!-- built-in security feature to protect against CSRF attacks (token must match user session) -->
+        <button type="submit">Yes, delete!</button>
+    </form>
+    <br>
+    <a href="{% url 'records:billing_detail' object.pk %}">Cancel</a>
+{% endblock %}

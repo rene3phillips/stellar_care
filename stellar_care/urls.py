@@ -17,7 +17,7 @@ urlpatterns = [
 
     # App-specific
     path('records/', include('records.urls')),
-    path('', RedirectView.as_view(url='/records/', permanent=False)),
+    path('', RedirectView.as_view(url='/records/patients', permanent=False)),
 
     # API Routes
     path('api/', include(router.urls)),
