@@ -28,6 +28,6 @@ urlpatterns = [
     path('api/schema/redoc', SpectacularRedocView.as_view(), name='redoc'),
 ]
 
-# CSS (Docker)
+# CSS (Local Docker files)
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

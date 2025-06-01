@@ -12,7 +12,8 @@ if os.path.exists(env_file_path):
 # Basic settings
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG') 
-ALLOWED_HOSTS = [] 
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
 
 # Installed apps
 INSTALLED_APPS = [
@@ -76,6 +77,7 @@ SOCIALACCOUNT_PROVIDERS = {
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # required for CSS
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -154,8 +156,9 @@ REST_FRAMEWORK = {
 }
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles' # Docker
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'

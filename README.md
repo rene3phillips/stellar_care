@@ -242,3 +242,134 @@ docker compose exec web python manage.py createsuperuser
 
 - Visit `http://localhost:8000` to use the web frontend.
 - API base URL: `http://localhost:8000/api/`
+
+## AWS Deployment
+
+### AWS Services Used
+
+- ECR (Elastic Container Registry): Stores the Docker images for StellarCare
+- EC2 (Elastic Compute Cloud): Hosts the application using Docker
+- IAM Role: Manages permissions for pushing/pulling images and EC2 instance management
+
+## Create IAM Role for EC2 to Access ECR
+
+1. Navigate to IAM -> Roles -> Create role
+2. Select AWS service, under Use case select EC2
+3. Attach permissions: select `AmazonEC2ContainerRegistryReadOnly`
+4. Name the role: `EC2InstanceRoleForECR`
+5. Create role
+
+## Create ECR Repository
+
+Go to AWS Console -> ECR -> Create repository -> name it `my-django-app`
+
+## Pushing Docker Image to ECR
+
+1. Authenticate Docker to your ECR repository:
+``` powershell
+aws ecr get-login-password --region YOUR_REGION | docker login --username AWS --password-stdin YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_REGION.amazonaws.com
+```
+
+2. Build your Docker image locally:
+``` powershell
+docker compose build web
+```
+
+3. Tag the Docker image for ECR:
+``` powershell
+docker tag my-django-app:latest YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_REGION.amazonaws.com/my-django-app:latest
+```
+
+4. Push the tagged image to ECR:
+``` powershell
+docker push YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_REGION.amazonaws.com/my-django-app:latest
+```
+
+## EC2 Instance Setup to Run Your Docker Compose App
+
+1. Launch an EC2 instance (Amazon Linux 2) and select the IAM role you created earlier.
+
+2. SSH into the EC2 instance:
+```powershell
+ssh -i your-key.pem ec2-user@YOUR_EC2_PUBLIC_IP
+```
+
+3. Install Docker and Docker Compose on EC2:
+``` powershell
+sudo yum update -y
+sudo yum install -y docker docker-compose-plugin
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker ec2-user
+newgrp docker
+docker --version
+docker compose version
+```
+
+4. Authenticate Docker on EC2 to pull from ECR:
+``` powershell
+aws ecr get-login-password --region YOUR_REGION | docker login --username AWS --password-stdin YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_REGION.amazonaws.com
+```
+
+5. Pull your Docker Image from ECR:
+```powershell
+docker pull YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_REGION.amazonaws.com/my-django-app:latest
+```
+
+6. Copy your `docker-compose.yml` and `.env` file to the EC2 instance:
+```powershell
+scp -i your-key-.pem docker-compose.yml ec2-user@YOUR_EC2_PUBLIC_IP:/home/ec2-user
+scp -i your-key-.pem .env ec2-user@YOUR_EC2_PUBLIC_IP:/home/ec2-user
+```
+
+7. Update your `docker-compose.yml` on EC2 to use the ECR image:
+```yaml
+version: '3.8'
+services:
+    web:
+    # Use the image from ECR instead of building locally
+    image: <aws_account_id>.dkr.ecr.<region>[.amazonaws.com/](https://.amazonaws.com/)<your_repo_name>:latest 
+    container_name: django_web
+    # Command just starts Gunicorn; migrations run separately
+    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
+    # volumes: # REMOVE or comment out the local code mount
+    #  - .:/app 
+    ports:
+        # Map host port 8000 to container port 8000 (Gunicorn)
+        - "8000:8000" 
+    env_file:
+        - .env 
+    depends_on:
+        - db 
+
+    db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    volumes:
+        - postgres_data:/var/lib/postgresql/data/ 
+    env_file:
+        - .env 
+    # No ports needed here for web service access
+
+volumes:
+    postgres_data:
+```
+
+8. Make sure your `.env` on EC2 matches the `env.example` file. DEBUG should be set to True for production. 
+
+9. Run Docker Compose on EC2 to start your app:
+```powershell
+docker compose up -d
+```
+
+10. Apply database migrations:
+```powershell
+docker compose exec web python manage.py migrate
+```
+
+11. Collect static files:
+```
+docker compose exec web python manage.py collectstatic --noinput
+```
+
+12. Your application should now be accessible via `http:YOUR_EC2_PUBLIC_IP:8000`
