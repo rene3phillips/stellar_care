@@ -47,13 +47,14 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # ACCOUNT_EMAIL_REQUIRED = True # email required for signup and login
-ACCOUNT_LOGIN_METHODS = {'email'} # New
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*'] # New
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 # ACCOUNT_USERNAME_REQUIRED = False  
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_EMAIL_VERIFICATION = 'optional' 
 LOGIN_REDIRECT_URL = '/' # will redirect to /records/ due to project urls.py
 ACCOUNT_LOGOUT_REDIRECT_URL = '/' 
+ACCOUNT_SIGNUP_REDIRECT_URL = 'https://stellar-care.net/records/patients/'
 # ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True 
 ACCOUNT_SESSION_REMEMBER = True 
 
@@ -168,3 +169,34 @@ USE_TZ = True
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Required for Allauth/ Google OAuth when running behind an HTTPS proxy like Nginx
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# EMAIL SETTINGS FOR DEVELOPMENT
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Debugging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG' if os.environ.get("DEBUG") == "True" else "WARNING",
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if os.environ.get("DEBUG") == "True" else "WARNING",
+            'propagate': False,
+        },
+    },
+}
