@@ -373,3 +373,130 @@ docker compose exec web python manage.py collectstatic --noinput
 ```
 
 12. Your application should now be accessible via `http:YOUR_EC2_PUBLIC_IP:8000`
+
+## Kubernetes Local Development Setup & Monitoring Guide
+
+### 1. Local Kubernetes Environment Setup
+
+Install Minikube (https://minikube.sigs.k8s.io/docs/start/)
+
+```powershell
+minikube start
+```
+
+### 2. Django Health Check Endpoint
+
+Make sure your Django app has a health check endpoint
+
+```python
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+class HealthCheckView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response({"status": "ok"}, status=status.HTTP_200_OK)
+```
+
+Add this to your URLs if not already present.
+
+### 3. Creating Kubernetes Secrets
+
+Create secrets from environment files 
+
+```powershell
+kubectl create secret generic app-secret --from-env-file=k8s-pg-secrets.env
+kubectl create secret generic app-secret --from-env-file=k8s-app-secrets.env
+```
+
+Make sure your DATABASE_URL host in the env file matches your Kubernetes service name for your DB
+
+## 4. Local Image Management for Minikube
+
+Build images inside Minikube's Docker environment
+
+```powershell
+minikube -p minikube docker-env --shell powershell | Invoke-Expression
+
+docker build --no-cache -t stellar_care-web:latest .
+```
+
+## 5. Applying Kubernetes Manifests
+
+Apply all your manifests with: 
+```powershell
+kubectl apply -f k8s/postgres-pvc.yaml -f k8s/postgres-deployment.yaml -f k8s/postgres-service.yaml -f k8s/app-configmap.yaml -f k8s/app-deployment.yaml -f k8s/app-service.yaml
+```
+
+## 6. Intalling kube-prometheus-stack with Helm
+
+Add repo and install Prometheus and Grafana stack:
+```powershell
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prom-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace --version 72.0.1
+```
+
+## 7. Accessing Your Application
+
+```powershell
+minikube service app-service --url
+```
+
+## 8. Accessing Grafana
+
+Get Grafana admin password:
+```bash
+kubectl get secret --namespace monitoring prom-stack-grafana \
+  -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
+Port-forward Grafana to local machine:
+```bash
+kubectl port-forward --namespace monitoring svc/prom-stack-grafana 3000:80
+```
+
+Login at `http://localhost:3000` with user `admin` and retrieved password.
+
+## 9. Running Database Migrations
+
+Run Django migrations inside the app pod:
+
+```powershell
+kubectl exec -it <app-pod-name> -- python manage.py migrate
+```
+
+Replace <app-pod-name> with your actual pod name (kubectl get pods).
+
+## 10. Scaling and Rolling Updates
+
+- Scale Deployment:
+
+```powershell
+kubectl scale deployment app-deployment --replicas=3
+kubectl get pods
+```
+
+- Rolling Update:
+    1. Edit `k8s/app-deployment.yaml`, update `image:` tag to a new one
+    2. Apply changes:
+    ```powershell
+    kubectl apply -f k8s/app-deployment.yaml
+    ```
+    3. Check rollout status:
+    ```powershell
+    kubectl rollout status deployment/app-deployment
+    kubectl get pods
+    ```
+    4. Rollback if necessary:
+    ```powershell
+    kubectl rollout undo deployment/app-deployment
+    ```
+
+## ⚠️ Important Cost Warning
+
+If using managed Kubernetes services like Amazon EKS, Google GKE or Azure AKS, be aware that clusters, node pools, and cloud resources can incur significant charges. Always:
+
+- Monitor your cloud usage.
+- Delete resources when not in use.
+- Use free tiers or local clusters (Minikube/Docker Desktop) for development to avoid unexpected costs. 

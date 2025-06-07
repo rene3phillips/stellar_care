@@ -6,6 +6,7 @@ from records import api_views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from django.conf import settings
 from django.conf.urls.static import static
+from records.api_views import HealthCheckView
 
 router = DefaultRouter()
 router.register(r'patients', api_views.PatientViewSet, basename='patient')
@@ -26,8 +27,5 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui', SpectacularSwaggerView.as_view(), name='swagger-ui'),
     path('api/schema/redoc', SpectacularRedocView.as_view(), name='redoc'),
+    path('api/health/', HealthCheckView.as_view(), name='health_check')
 ]
-
-# CSS (Local Docker files)
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

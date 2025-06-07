@@ -158,7 +158,7 @@ REST_FRAMEWORK = {
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles' # Docker
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Internationalization
@@ -172,9 +172,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Required for Allauth/ Google OAuth when running behind an HTTPS proxy like Nginx
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False # false for testing
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 # EMAIL SETTINGS FOR DEVELOPMENT
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
