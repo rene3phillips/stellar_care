@@ -172,31 +172,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Required for Allauth/ Google OAuth when running behind an HTTPS proxy like Nginx
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = False # false for testing
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # EMAIL SETTINGS FOR DEVELOPMENT
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Debugging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG' if os.environ.get("DEBUG") == "True" else "WARNING",
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG' if os.environ.get("DEBUG") == "True" else "WARNING",
-            'propagate': False,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console'],
+#         'level': 'DEBUG' if os.environ.get("DEBUG") == "True" else "WARNING",
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG' if os.environ.get("DEBUG") == "True" else "WARNING",
+#             'propagate': False,
+#         },
+#     },
+# }
